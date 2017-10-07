@@ -11,6 +11,8 @@ theme = "vertical-land"
 [params]
 description = "%s"
 mainTitle = "%s"
+logo = "%s"
 subTitle = "%s"
 optinTitle = "%s"
+optinFormTitle = "%s"
 background = "%s" """

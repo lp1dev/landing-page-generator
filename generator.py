@@ -7,43 +7,46 @@ import  config
 class   Page():
   def   __init__(self, name):
     self.name = name
-    self.shortName = self.name.strip()
-    self.relpath = "static/" + self.shortName
+    self.shortName = self.name.lower().replace(' ', '-')
+    self.relpath = "sites/" + self.shortName
     
-  def   prepare(self):
-    call(["hugo", "new", "site", self.relpath])
-    call(["git", "clone", config.theme_repo, self.relpath + "/themes/" + config.theme])
-    return
-
-  def   configure(self, header, logo, services, optin, footer):
-    with open(self.relpath + "/" + config.hugo_config, "w+") as f:
+  def   configure(self, page_config):
+    with open(config.hugo_config, "w+") as f:
       hugo_config = config.hugo_config_template %(
         self.shortName,
         self.name,
-        self.name,
-        header,
-        self.name,
-        self.name,
-        optin
+        page_config['description'],
+        page_config['mainTitle'],
+        page_config['logo'],
+        page_config['subTitle'],
+        page_config['optinTitle'],
+        page_config['optinFormTitle'],
+        page_config['background']
       )
       f.write(hugo_config)
-    with open(self.relpath + "/data/footer.json", "w+") as f:
-      f.write(json.dumps(footer))
-    with open(self.relpath + "/data/services.json", "w+") as f:
-      f.write(json.dumps(services))
+    with open("data/footer.json", "w+") as f:
+      f.write(json.dumps(page_config['footer']))
+    with open("data/services.json", "w+") as f:
+      f.write(json.dumps(page_config['services']))
 
   def   deploy(self):
+    call(["hugo", "-d", self.relpath])
     return
 
 def	main():
   page = Page("Test Page")
-  page.prepare()
-  page.configure("This is my generated page",
-                 "https://lp1.eu/public/amsell_j.png",
-                 {"services": [{"title":"Test"}]},
-                 "",
-                 {"footer":"Hello I'm the footer"}
-  )
+  page_config = {
+    "description": "lp1.eu - Generated Page - Description",
+    "mainTitle": "Generated page main title",
+    "logo": "https://lp1.eu/res/svg/avatar.svg",
+    "subTitle": "Generated Page subtitle",
+    "optinTitle": "Generated Page optInTitle",
+    "optinFormTitle": "Generated Page optinFormTitle",
+    "background": "img/bg.png",
+    "services": {"services":[{"title": "Test Generated Service", "description": "Test description"}]},
+    "footer": {"footer": "Test Generated footer"}
+  } ## Default page config
+  page.configure(page_config)
   page.deploy()
   return
 

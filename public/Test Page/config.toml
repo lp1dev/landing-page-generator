@@ -1,0 +1,12 @@
+
+baseurl = "https://lp1.eu/Test Page"
+languageCode = "en-us"
+title = "Test Page"
+theme = "vertical-land"
+
+[params]
+description = "Test Page"
+mainTitle = "This is my generated page"
+subTitle = "Test Page"
+optinTitle = "Test Page"
+background = "" 
